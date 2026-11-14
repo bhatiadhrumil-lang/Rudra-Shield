@@ -18,6 +18,7 @@ export type Lab = {
   description: string;
   capabilities: string[];
   image: string;
+  imageAlt: string;
   icon: LucideIcon;
 };
 
@@ -36,6 +37,7 @@ export const labs: Lab[] = [
       "Incident escalation",
     ],
     image: "soc-monitors",
+    imageAlt: "Security operations centre monitors showing live log and network dashboards",
     icon: MonitorPlay,
   },
   {
@@ -52,6 +54,7 @@ export const labs: Lab[] = [
       "Technical reporting",
     ],
     image: "code-screen",
+    imageAlt: "A darkened laptop screen displaying scrolling terminal code during a penetration-testing exercise",
     icon: Crosshair,
   },
   {
@@ -68,6 +71,7 @@ export const labs: Lab[] = [
       "Identity hardening",
     ],
     image: "network-mesh",
+    imageAlt: "Abstract blue network mesh representing cloud infrastructure and connected services",
     icon: Cloud,
   },
   {
@@ -84,6 +88,7 @@ export const labs: Lab[] = [
       "Evidence reporting",
     ],
     image: "server-racks",
+    imageAlt: "Illuminated server racks with network cabling in a secure data centre",
     icon: Fingerprint,
   },
   {
@@ -100,6 +105,7 @@ export const labs: Lab[] = [
       "Remediation",
     ],
     image: "code-stream",
+    imageAlt: "Streams of application source code on a dark display",
     icon: Code2,
   },
   {
@@ -116,6 +122,7 @@ export const labs: Lab[] = [
       "Adversary tracking",
     ],
     image: "earth-network",
+    imageAlt: "Satellite view of Earth at night with illuminated city networks",
     icon: Radar,
   },
   {
@@ -132,6 +139,7 @@ export const labs: Lab[] = [
       "Team coordination",
     ],
     image: "network-switch",
+    imageAlt: "Ethernet cables connected to a network switch in a lab rack",
     icon: Network,
   },
   {
@@ -148,6 +156,7 @@ export const labs: Lab[] = [
       "Team competition",
     ],
     image: "circuit-macro",
+    imageAlt: "Macro view of a densely populated circuit board",
     icon: Flag,
   },
 ];

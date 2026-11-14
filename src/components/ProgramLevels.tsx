@@ -1,12 +1,31 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, ChevronRight } from "lucide-react";
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { programLevels } from "../data/program";
 
 export function ProgramLevels() {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeLevel = programLevels[activeIndex];
   const reducedMotion = useReducedMotion();
+  const tabListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = tabListRef.current;
+    const activeTab = document.getElementById(`level-tab-${programLevels[activeIndex].id}`);
+    if (!container || !activeTab || container.scrollWidth <= container.clientWidth) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const tabRect = activeTab.getBoundingClientRect();
+    const target =
+      container.scrollLeft +
+      (tabRect.left - containerRect.left) -
+      (container.clientWidth - tabRect.width) / 2;
+
+    container.scrollTo({
+      left: Math.max(0, target),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [activeIndex, reducedMotion]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     let nextIndex: number | null = null;
@@ -31,6 +50,7 @@ export function ProgramLevels() {
   return (
     <div className="level-layout">
       <div
+        ref={tabListRef}
         className="level-tabs"
         role="tablist"
         aria-label="Six-level cybersecurity competency framework"

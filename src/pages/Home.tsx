@@ -76,7 +76,7 @@ export default function Home() {
                 <ImageFrame
                   className="intro-media__frame aspect-[4/3]"
                   name="students-lab"
-                  alt="Students working together at computers in a collaborative learning environment"
+                  alt="Close-up of hands using a laptop during a collaborative learning exercise"
                   sizes="(min-width: 1024px) 42vw, 100vw"
                   priority
                 />

@@ -7,20 +7,19 @@ export const site = {
   programName: "University Cyber Security Value-Added Program",
   programAcronym: "U-CSVAP",
   programAlias: "Industry-Integrated Cyber Security Employability Framework",
-  email: {
-    value: "contact@rudrashield.example",
-    isPlaceholder: true,
+  generalEmail: {
+    value: "rudrashieldcybersystems@gmail.com",
+    href: "mailto:rudrashieldcybersystems@gmail.com",
+  },
+  hiringEmail: {
+    value: "hiring.rudrashield@gmail.com",
+    href: "mailto:hiring.rudrashield@gmail.com",
   },
   phone: {
-    value: "To be confirmed",
-    isPlaceholder: true,
+    value: "+91 9714207205",
+    href: "tel:+919714207205",
   },
-  address: {
-    value: "To be confirmed",
-    isPlaceholder: true,
-  },
-  responseNote:
-    "Official contact channels are pending publication. Please use the enquiry form once delivery is configured.",
+  owner: "Keval Mehta",
 } as const;
 
 export const enquiryTypes = [

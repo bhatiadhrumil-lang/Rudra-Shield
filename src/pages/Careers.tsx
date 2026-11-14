@@ -18,6 +18,7 @@ import { PageHero } from "../components/PageHero";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
 import { Seo } from "../components/Seo";
+import { site } from "../data/site";
 
 const supportAreas = [
   {
@@ -107,7 +108,7 @@ export default function Careers() {
     <>
       <Seo
         title="Career & Opportunities"
-        description="Discover RudraShield career-readiness support: internships preparation, industry mentorship, practical projects, portfolio development, certification readiness and placement support."
+        description="Discover RudraShield career-readiness support and recruitment opportunities: internship preparation, industry mentorship, practical projects, portfolio development and placement support."
         path="/careers"
       />
 
@@ -118,7 +119,7 @@ export default function Careers() {
         meta={[
           { label: "Focus", value: "Career readiness" },
           { label: "Support", value: "Mentorship · Projects · Placement prep" },
-          { label: "Evidence", value: "Portfolio-led" },
+          { label: "Hiring", value: "Recruitment email" },
           { label: "Important", value: "No employment guarantee" },
         ]}
       />
@@ -298,12 +299,13 @@ export default function Careers() {
       </section>
 
       <CTASection
-        title="Explore Opportunities"
-        description="Talk to us about internship pathways, career-readiness support or how career preparation can be integrated into your institution's program."
-        primaryLabel="Explore Opportunities"
-        primaryTo="/contact?enquiry=Internship%20Opportunities"
-        secondaryLabel="University Partnerships"
-        secondaryTo="/partnerships"
+        eyebrow="Hiring & recruitment"
+        title="Interested in joining RudraShield?"
+        description={`Send your resume and career enquiry to our hiring team at ${site.hiringEmail.value}.`}
+        primaryLabel="Email Hiring Team"
+        primaryTo={site.hiringEmail.href}
+        secondaryLabel="Career Enquiry Form"
+        secondaryTo="/contact?enquiry=Internship%20Opportunities"
         note="Career readiness support · No guaranteed employment or internship placement"
       />
     </>

@@ -5,7 +5,7 @@ import { Reveal } from "./Reveal";
 
 type CTASectionProps = {
   title: ReactNode;
-  description: string;
+  description: ReactNode;
   primaryLabel: string;
   primaryTo: string;
   secondaryLabel?: string;

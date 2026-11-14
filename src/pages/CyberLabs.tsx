@@ -1,4 +1,4 @@
-import { ArrowUpRight, ClipboardCheck, Info, ShieldCheck, Users, Wrench } from "lucide-react";
+import { ClipboardCheck, Info, ShieldCheck, Users, Wrench } from "lucide-react";
 import { CTASection } from "../components/CTASection";
 import { ImageFrame } from "../components/ImageFrame";
 import { PageHero } from "../components/PageHero";
@@ -77,7 +77,7 @@ export default function CyberLabs() {
                   <div className="lab-feature__media">
                     <ImageFrame
                       name={lab.image}
-                      alt={`${lab.name} learning environment`}
+                      alt={lab.imageAlt}
                       className="h-full w-full"
                       sizes="(min-width: 1024px) 45vw, 100vw"
                     />
@@ -87,10 +87,7 @@ export default function CyberLabs() {
                     </span>
                   </div>
                   <div className="lab-feature__body">
-                    <div className="flex items-start justify-between gap-4">
-                      <h3>{lab.name}</h3>
-                      <ArrowUpRight size={16} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
-                    </div>
+                    <h3>{lab.name}</h3>
                     <p className="lab-feature__desc">{lab.description}</p>
                     <div className="lab-feature__caps">
                       {lab.capabilities.map((capability) => (

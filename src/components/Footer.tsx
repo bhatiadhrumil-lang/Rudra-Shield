@@ -1,4 +1,4 @@
-import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, Mail, Phone, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { footerNavigation } from "../data/navigation";
 import { site } from "../data/site";
@@ -40,21 +40,41 @@ export function Footer() {
 
           <div>
             <h2 className="footer-col-heading">Get in touch</h2>
+            <p className="mt-4 text-sm font-medium text-ink-soft">{site.name}</p>
             <ul className="mt-4 flex flex-col gap-3.5">
               <li className="flex items-start gap-2.5">
                 <Mail size={14} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
-                <span className="text-xs leading-relaxed text-ink-dim">
-                  {site.email.value}
-                  <span className="status-tag ml-2">Placeholder</span>
+                <span>
+                  <span className="footer-contact-label">General enquiries</span>
+                  <a className="footer-contact-link" href={site.generalEmail.href}>
+                    {site.generalEmail.value}
+                  </a>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <BriefcaseBusiness size={14} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
+                <span>
+                  <span className="footer-contact-label">Hiring &amp; recruitment</span>
+                  <a className="footer-contact-link" href={site.hiringEmail.href}>
+                    {site.hiringEmail.value}
+                  </a>
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Phone size={14} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
-                <span className="text-xs leading-relaxed text-ink-dim">{site.phone.value}</span>
+                <span>
+                  <span className="footer-contact-label">Phone</span>
+                  <a className="footer-contact-link" href={site.phone.href}>
+                    {site.phone.value}
+                  </a>
+                </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <MapPin size={14} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
-                <span className="text-xs leading-relaxed text-ink-dim">{site.address.value}</span>
+                <UserRound size={14} className="mt-1 shrink-0 text-cyber-500" aria-hidden="true" />
+                <span>
+                  <span className="footer-contact-label">Website owner</span>
+                  <span className="text-xs leading-relaxed text-ink-dim">{site.owner}</span>
+                </span>
               </li>
             </ul>
             <Link to="/contact" className="link-arrow mt-5">

@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Info, Loader2, Send } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { enquiryTypes, type EnquiryType } from "../data/site";
 import {
   ContactConfigurationError,
+  ContactSubmissionError,
   isContactEndpointConfigured,
   sendEnquiry,
 } from "../lib/contact";
@@ -69,6 +70,8 @@ const fieldErrorId = (field: keyof ContactFormValues) => `${field}-error`;
 export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const submittingRef = useRef(false);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -98,6 +101,16 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
     }
   }, [initialEnquiry, setValue]);
 
+  useEffect(() => {
+    if (status !== "success" && status !== "error" && status !== "config") return;
+
+    const element = statusRef.current;
+    if (!element) return;
+
+    element.focus({ preventScroll: true });
+    element.scrollIntoView({ block: "center", behavior: "auto" });
+  }, [status]);
+
   const onSubmit = async (values: ContactFormValues) => {
     setErrorMessage("");
 
@@ -107,6 +120,8 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
       return;
     }
 
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setStatus("loading");
 
     try {
@@ -118,9 +133,6 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
         designation: values.designation,
         enquiryType: values.enquiryType as EnquiryType,
         message: values.message,
-        consent: values.consent,
-        submittedAt: new Date().toISOString(),
-        source: "rudrashield-website",
       });
       reset({
         fullName: "",
@@ -139,20 +151,52 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
         setStatus("config");
         return;
       }
-      console.error("Enquiry submission failed:", error);
+
       setStatus("error");
-      setErrorMessage(
-        error instanceof Error && error.name === "AbortError"
-          ? "The request timed out. Please try again."
-          : "We could not send your enquiry. Please try again shortly.",
-      );
+
+      if (error instanceof ContactSubmissionError) {
+        console.error(
+          `Enquiry submission failed (code: ${error.code ?? "UNKNOWN"}, status: ${
+            error.status ?? "no HTTP response"
+          }).`,
+        );
+
+        if (error.code === "RATE_LIMITED" || error.status === 429) {
+          setErrorMessage("Too many requests. Please wait a moment and try again.");
+        } else if (
+          error.code === "VALIDATION_ERROR" ||
+          error.code === "INVALID_REQUEST" ||
+          error.status === 400 ||
+          error.status === 422
+        ) {
+          setErrorMessage("Some details were not accepted. Check the form and try again.");
+        } else if (
+          error.code === "SERVICE_UNAVAILABLE" ||
+          error.code === "BUSY" ||
+          (error.status !== null && error.status >= 500)
+        ) {
+          setErrorMessage("The enquiry service is temporarily unavailable. Please try again shortly.");
+        } else if (error.code === "TIMEOUT") {
+          setErrorMessage("The request timed out. Please try again.");
+        } else if (error.status === null) {
+          setErrorMessage("Check your connection and try again.");
+        } else {
+          setErrorMessage("Please try again.");
+        }
+        return;
+      }
+
+      console.error("Enquiry submission failed (unknown code, no HTTP response).");
+      setErrorMessage("Please try again.");
+    } finally {
+      submittingRef.current = false;
     }
   };
 
   const loading = status === "loading" || isSubmitting;
 
   return (
-    <div className="panel panel-corners contact-panel">
+    <div id="enquiry-form" className="panel panel-corners contact-panel">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <span className="eyebrow">Enquiry form</span>
@@ -170,44 +214,47 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
           <span>
             <strong className="font-medium text-white">Backend configuration required.</strong> Enquiry delivery is
             not connected in this deployment. Submissions will not be transmitted until a contact endpoint is
-            configured.
+            configured. Please use the email or phone details on this page for direct contact.
           </span>
         </div>
       ) : null}
 
       {status === "success" ? (
-        <div className="form-status form-status--success mt-6" role="status" aria-live="polite">
+        <div
+          ref={statusRef}
+          className="form-status form-status--success mt-6"
+          role="status"
+          aria-live="polite"
+          tabIndex={-1}
+        >
           <CheckCircle2 aria-hidden="true" />
           <div>
-            <strong>Enquiry submitted</strong>
-            Your enquiry has been delivered successfully. The RudraShield team will review it and follow up through
-            the contact details you provided.
+            <strong>Thank you!</strong> Your enquiry has been submitted successfully. Our team will contact you soon.
           </div>
         </div>
       ) : null}
 
       {status === "config" ? (
-        <div className="form-status form-status--config mt-6" role="alert">
+        <div ref={statusRef} className="form-status form-status--config mt-6" role="alert" tabIndex={-1}>
           <Info aria-hidden="true" />
           <div>
             <strong>Form delivery is not configured</strong>
-            No message was sent. This deployment requires a contact endpoint before enquiries can be delivered. Official
-            contact channels will be published once confirmed.
+            No message was sent. This deployment requires a contact endpoint before enquiries can be delivered. Please
+            use the email or phone details on this page for direct contact.
           </div>
         </div>
       ) : null}
 
       {status === "error" ? (
-        <div className="form-status form-status--error mt-6" role="alert">
+        <div ref={statusRef} className="form-status form-status--error mt-6" role="alert" tabIndex={-1}>
           <AlertCircle aria-hidden="true" />
           <div>
-            <strong>Unable to send enquiry</strong>
-            {errorMessage || "Please try again shortly."}
+            <strong>Unable to submit your enquiry.</strong> {errorMessage || "Please try again."}
           </div>
         </div>
       ) : null}
 
-      <form className="mt-7" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className="mt-7" onSubmit={handleSubmit(onSubmit)} noValidate aria-busy={loading}>
         <div className="form-grid">
           <div className="form-field">
             <label htmlFor="fullName">
@@ -419,7 +466,7 @@ export function ContactForm({ initialEnquiry = "" }: ContactFormProps) {
               {loading ? (
                 <>
                   <Loader2 className="animate-spin" aria-hidden="true" />
-                  Submitting
+                  Submitting Enquiry...
                 </>
               ) : (
                 <>

@@ -1,30 +1,60 @@
-import { Check, Info, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Building2,
+  Check,
+  Info,
+  Mail,
+  Phone,
+  ShieldCheck,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { ContactForm } from "../components/ContactForm";
+import { FaqAccordion } from "../components/FaqAccordion";
 import { PageHero } from "../components/PageHero";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
 import { Seo } from "../components/Seo";
+import { contactFaqs } from "../data/faqs";
 import { enquiryTypes, site, type EnquiryType } from "../data/site";
 
-const channels = [
+type ContactChannel = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href?: string;
+};
+
+const channels: ContactChannel[] = [
+  {
+    icon: Building2,
+    label: "Company",
+    value: site.name,
+  },
   {
     icon: Mail,
-    label: "Email",
-    value: site.email.value,
-    tag: "Placeholder",
+    label: "General enquiries",
+    value: site.generalEmail.value,
+    href: site.generalEmail.href,
+  },
+  {
+    icon: BriefcaseBusiness,
+    label: "Hiring & recruitment",
+    value: site.hiringEmail.value,
+    href: site.hiringEmail.href,
   },
   {
     icon: Phone,
     label: "Phone",
     value: site.phone.value,
-    tag: "Pending",
+    href: site.phone.href,
   },
   {
-    icon: MapPin,
-    label: "Office",
-    value: site.address.value,
-    tag: "Pending",
+    icon: UserRound,
+    label: "Website owner",
+    value: site.owner,
   },
 ];
 
@@ -38,20 +68,20 @@ export default function Contact() {
   return (
     <>
       <Seo
-        title="Contact Us"
-        description="Contact RudraShield Cyber Systems about university partnerships, cybersecurity training, internships, industry collaboration or general enquiries."
+        title="Contact RudraShield Cyber Systems"
+        description="Contact RudraShield Cyber Systems by email or phone for university partnerships, cybersecurity training, recruitment, internships, industry collaboration or general enquiries."
         path="/contact"
       />
 
       <PageHero
         eyebrow="Contact RudraShield"
-        title="Let's build a stronger cybersecurity talent pipeline."
-        description="Whether you are a university exploring a partnership, an organisation interested in collaboration or a student seeking program information, start with an enquiry."
+        title="Contact RudraShield Cyber Systems."
+        description="Let's build a stronger cybersecurity talent pipeline. Reach our team by email or phone for university partnerships, cybersecurity training, recruitment, internships, industry collaboration or general enquiries."
         meta={[
-          { label: "Enquiry types", value: "05 categories" },
-          { label: "Official details", value: "Pending publication" },
-          { label: "Form delivery", value: "Configuration required" },
-          { label: "Program", value: site.programAcronym },
+          { label: "Company", value: site.name },
+          { label: "General enquiries", value: "Email & phone" },
+          { label: "Hiring & recruitment", value: "Email" },
+          { label: "Website owner", value: site.owner },
         ]}
       />
 
@@ -76,8 +106,13 @@ export default function Contact() {
                       <div>
                         <h3>{channel.label}</h3>
                         <div className="contact-channel__value">
-                          <span>{channel.value}</span>
-                          <span className="status-tag">{channel.tag}</span>
+                          {channel.href ? (
+                            <a className="contact-channel__link" href={channel.href}>
+                              {channel.value}
+                            </a>
+                          ) : (
+                            <span>{channel.value}</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -87,9 +122,9 @@ export default function Contact() {
                 <div className="notice-strip mt-6">
                   <Info aria-hidden="true" />
                   <span>
-                    <strong className="font-medium text-white">Placeholder notice:</strong> official contact details have
-                    not been supplied. The email address is a reserved placeholder and is not a live inbox. These must be
-                    replaced with confirmed institutional details before launch.
+                    <strong className="font-medium text-white">Contact guidance:</strong> use general enquiries for
+                    university partnerships, institutional collaborations, training and corporate partnerships. Use
+                    hiring &amp; recruitment for resumes and career enquiries.
                   </span>
                 </div>
 
@@ -124,6 +159,31 @@ export default function Contact() {
 
             <Reveal delay={0.12}>
               <ContactForm initialEnquiry={initialEnquiry} />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-veil" aria-labelledby="faq-heading">
+        <div className="container-shell">
+          <div className="faq-layout">
+            <div className="faq-aside">
+              <SectionHeading
+                eyebrow="Common questions"
+                title="Clarity before the first conversation."
+                description="Straight answers about curriculum, delivery, career support and how a university partnership begins."
+                id="faq-heading"
+              />
+              <div className="faq-aside__note">
+                <span className="mono-label">Still have a different question?</span>
+                <a href="#enquiry-form" className="link-arrow mt-3">
+                  Go to the enquiry form
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+            <Reveal delay={0.08}>
+              <FaqAccordion items={contactFaqs} />
             </Reveal>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { mainNavigation } from "../data/navigation";
 import { site } from "../data/site";
 import { ButtonLink } from "./ButtonLink";
 import { Logo } from "./Logo";
+import { ScrollProgress } from "./ScrollProgress";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,6 +26,16 @@ export function Navbar() {
   useEffect(() => {
     setOpen(false);
   }, [location.pathname, location.search]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+
+    desktop.addEventListener("change", handleChange);
+    return () => desktop.removeEventListener("change", handleChange);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -105,6 +116,7 @@ export function Navbar() {
             </button>
           </div>
         </div>
+        <ScrollProgress />
       </header>
 
       <AnimatePresence>

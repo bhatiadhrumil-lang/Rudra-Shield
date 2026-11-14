@@ -20,6 +20,9 @@ import { PageHero } from "../components/PageHero";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
 import { Seo } from "../components/Seo";
+import { site } from "../data/site";
+
+const [generalEmailUser, generalEmailDomain] = site.generalEmail.value.split("@");
 
 const partnershipFramework = [
   {
@@ -186,7 +189,7 @@ export default function Partnerships() {
     <>
       <Seo
         title="University Partnerships"
-        description="Explore RudraShield's university partnership framework: collaborative governance, a no-curriculum-change delivery model and flexible commercial engagement options."
+        description="Explore RudraShield's university and institutional partnership framework: collaborative governance, a no-curriculum-change delivery model and flexible engagement options for training and corporate collaboration."
         path="/partnerships"
       />
 
@@ -213,7 +216,7 @@ export default function Partnerships() {
             aside={<span className="chip chip--cyan">Value-added delivery</span>}
           />
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="partnership-grid mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {partnershipFramework.map((item, index) => (
               <Reveal key={item.title} delay={index * 0.05}>
                 <article
@@ -451,12 +454,19 @@ export default function Partnerships() {
       </section>
 
       <CTASection
+        eyebrow="Partnership enquiries"
         title="Discuss Partnership Opportunities"
-        description="Start a scoping conversation about your institution, your students and the outcomes you want to strengthen."
-        primaryLabel="Discuss Partnership Opportunities"
-        primaryTo="/contact?enquiry=University%20Partnership"
-        secondaryLabel="Review U-CSVAP"
-        secondaryTo="/programs"
+        description={
+          <>
+            Email {generalEmailUser}@<wbr />
+            {generalEmailDomain} for university partnerships, institutional collaborations, training enquiries and
+            corporate partnerships.
+          </>
+        }
+        primaryLabel="Email Partnerships Team"
+        primaryTo={site.generalEmail.href}
+        secondaryLabel="Use Enquiry Form"
+        secondaryTo="/contact?enquiry=University%20Partnership"
         note="No curriculum modification required · Commercial terms tailored per engagement"
       />
     </>
